@@ -1,0 +1,8 @@
+;; String "dump("funds received")"
+slice __gen_slice_string_39e80f5d522b56f22a05ec284d7a0024823614548645c07a4b4f45cb816a0d5c() asm "B{b5ee9c7241010101001800002c64756d70282266756e6473207265636569766564222977e1acc7} B>boc <s PUSHSLICE";
+
+;; String "funds received"
+slice __gen_slice_string_22a6a2a99263a76cf7ab87fc0ed5e0f266dd926fac11446b1c38bc84fff439ad() asm "B{b5ee9c7241010101001000001c66756e647320726563656976656471daf862} B>boc <s PUSHSLICE";
+
+;; Comment "Sending 0.05 TON"
+cell __gen_cell_comment_cba300a31e7b9105e62aa393a3e2714b3db25f0c6839da48a936e5efd3f7eca4() asm "B{b5ee9c724101010100160000280000000053656e64696e6720302e303520544f4e9dca1dde} B>boc PUSHREF";

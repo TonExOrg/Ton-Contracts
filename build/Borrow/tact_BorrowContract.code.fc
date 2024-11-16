@@ -1,0 +1,207 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_BorrowContract.headers.fc";
+#include "tact_BorrowContract.stdlib.fc";
+#include "tact_BorrowContract.storage.fc";
+
+;;
+;; Contract BorrowContract functions
+;;
+
+(slice, int, int, int, cell) $BorrowContract$_contract_init() impure inline_ref {
+    var (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users)) = (null(), null(), null(), null(), null());
+    $self'owner = __tact_context_get_sender();
+    $self'softLiquidationThreshold = 110;
+    $self'maxCreditScore = 1000;
+    $self'maxThresholdPercent = 150;
+    $self'users = null();
+    return ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users);
+}
+
+((slice, int, int, int, cell), int) $BorrowContract$_fun_calculateThresholdPercent((slice, int, int, int, cell) $self, int $creditScore) impure inline_ref {
+    var (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users)) = $self;
+    int $range = ($self'maxThresholdPercent - $self'softLiquidationThreshold);
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ($self'maxThresholdPercent - (($creditScore * $range) / $self'maxCreditScore)));
+}
+
+;;
+;; Receivers of a Contract BorrowContract
+;;
+
+((slice, int, int, int, cell), ()) $BorrowContract$_internal_text_85d288384c0043458b02803cb22059f68803c553c3656344346468dac961f246((slice, int, int, int, cell) $self) impure inline {
+    var ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users) = $self;
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ());
+}
+
+(((slice, int, int, int, cell)), ()) $BorrowContract$_internal_binary_SetCreditScore((slice, int, int, int, cell) $self, (slice, int) $msg) impure inline {
+    var ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users) = $self;
+    var ($msg'user, $msg'creditScore) = $msg;
+    throw_unless(60939, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    throw_unless(26068, ($msg'creditScore <= $self'maxCreditScore));
+    if (null?($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, $msg'user)))) {
+        $self'users~__tact_dict_set_slice_cell(267, $msg'user, $UserInfo$_store_cell($UserInfo$_constructor_creditScore_totalBorrowed_totalCollateral_erc20Collateral_nftCollateral($msg'creditScore, 0, 0, null(), null())));
+    } else {
+        var ($userInfo'creditScore, $userInfo'totalBorrowed, $userInfo'totalCollateral, $userInfo'erc20Collateral, $userInfo'nftCollateral) = $UserInfo$_not_null($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, $msg'user)));
+        $userInfo'creditScore = $msg'creditScore;
+        $self'users~__tact_dict_set_slice_cell(267, $msg'user, $UserInfo$_store_cell(($userInfo'creditScore, $userInfo'totalBorrowed, $userInfo'totalCollateral, $userInfo'erc20Collateral, $userInfo'nftCollateral)));
+    }
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ());
+}
+
+(((slice, int, int, int, cell)), ()) $BorrowContract$_internal_binary_Borrow((slice, int, int, int, cell) $self, (slice, int, int) $msg) impure inline {
+    var ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users) = $self;
+    var ($msg'collateralToken, $msg'collateralAmount, $msg'borrowAmount) = $msg;
+    throw_unless(7177, (~ null?($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, __tact_context_get_sender())))));
+    var ($user'creditScore, $user'totalBorrowed, $user'totalCollateral, $user'erc20Collateral, $user'nftCollateral) = $UserInfo$_not_null($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, __tact_context_get_sender())));
+    throw_unless(6935, ($user'creditScore > 0));
+    int $requiredCollateral = (($msg'borrowAmount * ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users)~$BorrowContract$_fun_calculateThresholdPercent($user'creditScore)) / 100);
+    throw_unless(47933, ($msg'collateralAmount >= $requiredCollateral));
+    $user'totalBorrowed = ($user'totalBorrowed + $msg'borrowAmount);
+    if (null?(__tact_dict_get_slice_int($user'erc20Collateral, 267, $msg'collateralToken, 257))) {
+        $user'erc20Collateral~__tact_dict_set_slice_int(267, $msg'collateralToken, $msg'collateralAmount, 257);
+    } else {
+        $user'erc20Collateral~__tact_dict_set_slice_int(267, $msg'collateralToken, (__tact_not_null(__tact_dict_get_slice_int($user'erc20Collateral, 267, $msg'collateralToken, 257)) + $msg'collateralAmount), 257);
+    }
+    $user'totalCollateral = ($user'totalCollateral + $msg'collateralAmount);
+    $self'users~__tact_dict_set_slice_cell(267, __tact_context_get_sender(), $UserInfo$_store_cell(($user'creditScore, $user'totalBorrowed, $user'totalCollateral, $user'erc20Collateral, $user'nftCollateral)));
+    $global_send($SendParameters$_constructor_to_value_mode(__tact_context_get_sender(), $msg'borrowAmount, 2));
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ());
+}
+
+(((slice, int, int, int, cell)), ()) $BorrowContract$_internal_binary_RedeemERC20((slice, int, int, int, cell) $self, (slice, int) $msg) impure inline {
+    var ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users) = $self;
+    var ($msg'collateralToken, $msg'collateralAmount) = $msg;
+    throw_unless(7177, (~ null?($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, __tact_context_get_sender())))));
+    var ($user'creditScore, $user'totalBorrowed, $user'totalCollateral, $user'erc20Collateral, $user'nftCollateral) = $UserInfo$_not_null($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, __tact_context_get_sender())));
+    throw_unless(61795, (~ null?(__tact_dict_get_slice_int($user'erc20Collateral, 267, $msg'collateralToken, 257))));
+    int $collateralBalance = __tact_not_null(__tact_dict_get_slice_int($user'erc20Collateral, 267, $msg'collateralToken, 257));
+    throw_unless(60323, ($collateralBalance >= $msg'collateralAmount));
+    $user'erc20Collateral~__tact_dict_set_slice_int(267, $msg'collateralToken, ($collateralBalance - $msg'collateralAmount), 257);
+    $user'totalCollateral = ($user'totalCollateral - $msg'collateralAmount);
+    $self'users~__tact_dict_set_slice_cell(267, __tact_context_get_sender(), $UserInfo$_store_cell(($user'creditScore, $user'totalBorrowed, $user'totalCollateral, $user'erc20Collateral, $user'nftCollateral)));
+    $global_send($SendParameters$_constructor_to_value_mode($msg'collateralToken, $msg'collateralAmount, 2));
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ());
+}
+
+(((slice, int, int, int, cell)), ()) $BorrowContract$_internal_binary_PerformLiquidation((slice, int, int, int, cell) $self, (slice) $msg) impure inline {
+    var ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users) = $self;
+    var ($msg'user) = $msg;
+    throw_unless(21436, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    throw_unless(7177, (~ null?($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, $msg'user)))));
+    var ($user'creditScore, $user'totalBorrowed, $user'totalCollateral, $user'erc20Collateral, $user'nftCollateral) = $UserInfo$_not_null($UserInfo$_load_opt(__tact_dict_get_slice_cell($self'users, 267, $msg'user)));
+    int $thresholdPercent = ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users)~$BorrowContract$_fun_calculateThresholdPercent($user'creditScore);
+    if (((($user'totalCollateral * 100) / $user'totalBorrowed) < $thresholdPercent)) {
+        $user'totalBorrowed = 0;
+        $user'totalCollateral = 0;
+        $user'erc20Collateral = null();
+        $user'nftCollateral = null();
+        $self'users~__tact_dict_set_slice_cell(267, $msg'user, $UserInfo$_store_cell(($user'creditScore, $user'totalBorrowed, $user'totalCollateral, $user'erc20Collateral, $user'nftCollateral)));
+    }
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ());
+}
+
+(((slice, int, int, int, cell)), ()) $BorrowContract$_internal_binary_Deploy((slice, int, int, int, cell) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users)~$BorrowContract$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'softLiquidationThreshold, $self'maxCreditScore, $self'maxThresholdPercent, $self'users), ());
+}
+
+;;
+;; Get methods of a Contract BorrowContract
+;;
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract BorrowContract
+;;
+
+((slice, int, int, int, cell), int) $BorrowContract$_contract_router_internal((slice, int, int, int, cell) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive SetCreditScore message
+    if (op == 291) {
+        var msg = in_msg~$SetCreditScore$_load();
+        self~$BorrowContract$_internal_binary_SetCreditScore(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Borrow message
+    if (op == 1110) {
+        var msg = in_msg~$Borrow$_load();
+        self~$BorrowContract$_internal_binary_Borrow(msg);
+        return (self, true);
+    }
+    
+    ;; Receive RedeemERC20 message
+    if (op == 1929) {
+        var msg = in_msg~$RedeemERC20$_load();
+        self~$BorrowContract$_internal_binary_RedeemERC20(msg);
+        return (self, true);
+    }
+    
+    ;; Receive PerformLiquidation message
+    if (op == 2748) {
+        var msg = in_msg~$PerformLiquidation$_load();
+        self~$BorrowContract$_internal_binary_PerformLiquidation(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$BorrowContract$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "Deploy" message
+        if (text_op == 0x85d288384c0043458b02803cb22059f68803c553c3656344346468dac961f246) {
+            self~$BorrowContract$_internal_text_85d288384c0043458b02803cb22059f68803c553c3656344346468dac961f246();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $BorrowContract$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$BorrowContract$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $BorrowContract$_contract_store(self);
+}

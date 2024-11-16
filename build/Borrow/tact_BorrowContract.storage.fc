@@ -1,0 +1,206 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline {
+    return (true, $to, $value, $mode, null(), null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: UserInfo
+;; TLB: _ creditScore:int257 totalBorrowed:int257 totalCollateral:int257 erc20Collateral:dict<address, int> nftCollateral:dict<address, int> = UserInfo
+;;
+
+builder $UserInfo$_store(builder build_0, (int, int, int, cell, cell) v) inline {
+    var (v'creditScore, v'totalBorrowed, v'totalCollateral, v'erc20Collateral, v'nftCollateral) = v;
+    build_0 = build_0.store_int(v'creditScore, 257);
+    build_0 = build_0.store_int(v'totalBorrowed, 257);
+    build_0 = build_0.store_int(v'totalCollateral, 257);
+    build_0 = build_0.store_dict(v'erc20Collateral);
+    build_0 = build_0.store_dict(v'nftCollateral);
+    return build_0;
+}
+
+cell $UserInfo$_store_cell((int, int, int, cell, cell) v) inline {
+    return $UserInfo$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((int, int, int, cell, cell))) $UserInfo$_load(slice sc_0) inline {
+    var v'creditScore = sc_0~load_int(257);
+    var v'totalBorrowed = sc_0~load_int(257);
+    var v'totalCollateral = sc_0~load_int(257);
+    var v'erc20Collateral = sc_0~load_dict();
+    var v'nftCollateral = sc_0~load_dict();
+    return (sc_0, (v'creditScore, v'totalBorrowed, v'totalCollateral, v'erc20Collateral, v'nftCollateral));
+}
+
+tuple $UserInfo$_as_optional((int, int, int, cell, cell) v) inline {
+    var (v'creditScore, v'totalBorrowed, v'totalCollateral, v'erc20Collateral, v'nftCollateral) = v;
+    return __tact_tuple_create_5(v'creditScore, v'totalBorrowed, v'totalCollateral, v'erc20Collateral, v'nftCollateral);
+}
+
+tuple $UserInfo$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $UserInfo$_as_optional(sc~$UserInfo$_load());
+}
+
+((int, int, int, cell, cell)) $UserInfo$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'creditScore, int vvv'totalBorrowed, int vvv'totalCollateral, cell vvv'erc20Collateral, cell vvv'nftCollateral) = __tact_tuple_destroy_5(v);
+    return (vvv'creditScore, vvv'totalBorrowed, vvv'totalCollateral, vvv'erc20Collateral, vvv'nftCollateral);
+}
+
+((int, int, int, cell, cell)) $UserInfo$_constructor_creditScore_totalBorrowed_totalCollateral_erc20Collateral_nftCollateral(int $creditScore, int $totalBorrowed, int $totalCollateral, cell $erc20Collateral, cell $nftCollateral) inline {
+    return ($creditScore, $totalBorrowed, $totalCollateral, $erc20Collateral, $nftCollateral);
+}
+
+;;
+;; Type: SetCreditScore
+;; Header: 0x00000123
+;; TLB: set_credit_score#00000123 user:address creditScore:int257 = SetCreditScore
+;;
+
+(slice, ((slice, int))) $SetCreditScore$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 291);
+    var v'user = sc_0~__tact_load_address();
+    var v'creditScore = sc_0~load_int(257);
+    return (sc_0, (v'user, v'creditScore));
+}
+
+;;
+;; Type: Borrow
+;; Header: 0x00000456
+;; TLB: borrow#00000456 collateralToken:address collateralAmount:int257 borrowAmount:int257 = Borrow
+;;
+
+(slice, ((slice, int, int))) $Borrow$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1110);
+    var v'collateralToken = sc_0~__tact_load_address();
+    var v'collateralAmount = sc_0~load_int(257);
+    var v'borrowAmount = sc_0~load_int(257);
+    return (sc_0, (v'collateralToken, v'collateralAmount, v'borrowAmount));
+}
+
+;;
+;; Type: RedeemERC20
+;; Header: 0x00000789
+;; TLB: redeem_erc20#00000789 collateralToken:address collateralAmount:int257 = RedeemERC20
+;;
+
+(slice, ((slice, int))) $RedeemERC20$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1929);
+    var v'collateralToken = sc_0~__tact_load_address();
+    var v'collateralAmount = sc_0~load_int(257);
+    return (sc_0, (v'collateralToken, v'collateralAmount));
+}
+
+;;
+;; Type: PerformLiquidation
+;; Header: 0x00000abc
+;; TLB: perform_liquidation#00000abc user:address = PerformLiquidation
+;;
+
+(slice, ((slice))) $PerformLiquidation$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2748);
+    var v'user = sc_0~__tact_load_address();
+    return (sc_0, (v'user));
+}
+
+;;
+;; Type: BorrowContract
+;;
+
+builder $BorrowContract$_store(builder build_0, (slice, int, int, int, cell) v) inline {
+    var (v'owner, v'softLiquidationThreshold, v'maxCreditScore, v'maxThresholdPercent, v'users) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_int(v'softLiquidationThreshold, 257);
+    build_0 = build_0.store_int(v'maxCreditScore, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'maxThresholdPercent, 257);
+    build_1 = build_1.store_dict(v'users);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, int, int, int, cell))) $BorrowContract$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'softLiquidationThreshold = sc_0~load_int(257);
+    var v'maxCreditScore = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'maxThresholdPercent = sc_1~load_int(257);
+    var v'users = sc_1~load_dict();
+    return (sc_0, (v'owner, v'softLiquidationThreshold, v'maxCreditScore, v'maxThresholdPercent, v'users));
+}
+
+(slice, int, int, int, cell) $BorrowContract$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$BorrowContract$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        return $BorrowContract$_contract_init();
+    }
+}
+
+() $BorrowContract$_contract_store((slice, int, int, int, cell) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $BorrowContract$_store(b, v);
+    set_data(b.end_cell());
+}

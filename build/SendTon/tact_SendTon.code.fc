@@ -1,0 +1,129 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_SendTon.headers.fc";
+#include "tact_SendTon.stdlib.fc";
+#include "tact_SendTon.constants.fc";
+#include "tact_SendTon.storage.fc";
+
+;;
+;; Contract SendTon functions
+;;
+
+(slice, slice) $SendTon$_contract_init() impure inline_ref {
+    var (($self'deployer, $self'receiver)) = (null(), null());
+    $self'deployer = __tact_context_get_sender();
+    $self'receiver = __tact_context_get_sender();
+    return ($self'deployer, $self'receiver);
+}
+
+((slice, slice), slice) $SendTon$_fun_balance((slice, slice) $self) impure inline_ref {
+    var (($self'deployer, $self'receiver)) = $self;
+    return (($self'deployer, $self'receiver), $Int$_fun_toCoinsString(__tact_my_balance()));
+}
+
+;;
+;; Receivers of a Contract SendTon
+;;
+
+(((slice, slice)), ()) %$SendTon$_internal_empty((slice, slice) $self) impure inline {
+    var ($self'deployer, $self'receiver) = $self;
+    __tact_debug_str(__gen_slice_string_22a6a2a99263a76cf7ab87fc0ed5e0f266dd926fac11446b1c38bc84fff439ad(), __gen_slice_string_39e80f5d522b56f22a05ec284d7a0024823614548645c07a4b4f45cb816a0d5c(), "File contracts/send_ton.tact:15:9:");
+    return (($self'deployer, $self'receiver), ());
+}
+
+((slice, slice), ()) $SendTon$_internal_text_47c73ac587d8b1afb158f4748d870c56e5210e421f5d7e17393da9a321faf23e((slice, slice) $self) impure inline {
+    var ($self'deployer, $self'receiver) = $self;
+    throw_unless(54615, (__tact_my_balance() >= 60000000));
+    $global_send($SendParameters$_constructor_to_bounce_value_mode_body(__tact_context_get_sender(), true, 50000000, 2, __gen_cell_comment_cba300a31e7b9105e62aa393a3e2714b3db25f0c6839da48a936e5efd3f7eca4()));
+    return (($self'deployer, $self'receiver), ());
+}
+
+(((slice, slice)), ()) $SendTon$_internal_binary_Deploy((slice, slice) $self, (int) $deploy) impure inline {
+    var ($self'deployer, $self'receiver) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'deployer, $self'receiver)~$SendTon$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'deployer, $self'receiver), ());
+}
+
+;;
+;; Get methods of a Contract SendTon
+;;
+
+_ %balance() method_id(104128) {
+    var self = $SendTon$_contract_load();
+    var res = self~$SendTon$_fun_balance();
+    return res;
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract SendTon
+;;
+
+((slice, slice), int) $SendTon$_contract_router_internal((slice, slice) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive empty message
+    if ((op == 0) & (slice_bits(in_msg) <= 32)) {
+        self~%$SendTon$_internal_empty();
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$SendTon$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "send" message
+        if (text_op == 0x47c73ac587d8b1afb158f4748d870c56e5210e421f5d7e17393da9a321faf23e) {
+            self~$SendTon$_internal_text_47c73ac587d8b1afb158f4748d870c56e5210e421f5d7e17393da9a321faf23e();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $SendTon$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$SendTon$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $SendTon$_contract_store(self);
+}
