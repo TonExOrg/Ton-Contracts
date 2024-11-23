@@ -15,7 +15,7 @@ export class SendTon implements Contract {
 
     static createFromAddress(address: Address) {
         return new SendTon(address);
-    }
+    }       
 
     static createFromConfig(config: SendTonConfig, code: Cell, workchain = 0) {
         const data = sendTonConfigToCell(config);

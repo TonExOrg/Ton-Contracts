@@ -12,27 +12,27 @@ PROGRAM{
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
   DECLPROC $Withdraw$_load
-  DECLPROC $SendTon$_store
-  DECLPROC $SendTon$_load
+  DECLPROC $ST1$_store
+  DECLPROC $ST1$_load
   DECLPROC $StateInit$_not_null
   DECLPROC $Context$_get_value
-  DECLPROC $SendTon$_contract_init
-  DECLPROC $SendTon$_contract_load
-  DECLPROC $SendTon$_contract_store
+  DECLPROC $ST1$_contract_init
+  DECLPROC $ST1$_contract_load
+  DECLPROC $ST1$_contract_store
   DECLPROC $global_send
   DECLPROC $Int$_fun_toCoinsString
-  DECLPROC $SendTon$_fun_balance
+  DECLPROC $ST1$_fun_balance
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
-  DECLPROC $SendTon$_fun_forward
-  DECLPROC $SendTon$_fun_notify
+  DECLPROC $ST1$_fun_forward
+  DECLPROC $ST1$_fun_notify
   DECLPROC $SendParameters$_constructor_to_bounce_value_mode
   DECLPROC $DeployOk$_constructor_queryId
-  DECLPROC %$SendTon$_internal_empty
-  DECLPROC $SendTon$_internal_binary_Withdraw
-  DECLPROC $SendTon$_internal_binary_Deploy
+  DECLPROC %$ST1$_internal_empty
+  DECLPROC $ST1$_internal_binary_Withdraw
+  DECLPROC $ST1$_internal_binary_Deploy
   104128 DECLMETHOD %balance
   115390 DECLMETHOD lazy_deployment_completed
-  DECLPROC $SendTon$_contract_router_internal
+  DECLPROC $ST1$_contract_router_internal
   DECLPROC recv_internal
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sender
@@ -198,10 +198,10 @@ PROGRAM{
     LDGRAMS
     SWAP
   }>
-  $SendTon$_store PROCINLINE:<{
+  $ST1$_store PROCINLINE:<{
     __tact_store_address INLINECALLDICT
   }>
-  $SendTon$_load PROCINLINE:<{
+  $ST1$_load PROCINLINE:<{
     __tact_load_address INLINECALLDICT
   }>
   $StateInit$_not_null PROCINLINE:<{
@@ -214,10 +214,10 @@ PROGRAM{
     s1 s3 XCHG
     3 BLKDROP
   }>
-  $SendTon$_contract_init PROCREF:<{
+  $ST1$_contract_init PROCREF:<{
     __tact_context_get_sender INLINECALLDICT
   }>
-  $SendTon$_contract_load PROCREF:<{
+  $ST1$_contract_load PROCREF:<{
     c4 PUSH
     CTOS
     LDREF
@@ -226,7 +226,7 @@ PROGRAM{
     1 LDI
     SWAP
     IFJMP:<{
-      $SendTon$_load INLINECALLDICT
+      $ST1$_load INLINECALLDICT
       NIP
     }>
     DROP
@@ -235,9 +235,9 @@ PROGRAM{
     10 PUSHPOW2
     EQUAL
     137 THROWIFNOT
-    $SendTon$_contract_init INLINECALLDICT
+    $ST1$_contract_init INLINECALLDICT
   }>
-  $SendTon$_contract_store PROCINLINE:<{
+  $ST1$_contract_store PROCINLINE:<{
     NEWC
     __tact_context_sys GETGLOB
     SWAP
@@ -246,7 +246,7 @@ PROGRAM{
     SWAP
     1 STI
     SWAP
-    $SendTon$_store INLINECALLDICT
+    $ST1$_store INLINECALLDICT
     ENDC
     c4 POP
   }>
@@ -356,13 +356,13 @@ PROGRAM{
     9 PUSHINT
     __tact_float_to_string INLINECALLDICT
   }>
-  $SendTon$_fun_balance PROCREF:<{
+  $ST1$_fun_balance PROCREF:<{
     __tact_my_balance INLINECALLDICT
     $Int$_fun_toCoinsString INLINECALLDICT
   }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
-  $SendTon$_fun_forward PROCREF:<{
+  $ST1$_fun_forward PROCREF:<{
     PUSHNULL
     PUSHNULL
     s2 PUSH
@@ -384,12 +384,12 @@ PROGRAM{
     $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
     $global_send INLINECALLDICT
   }>
-  $SendTon$_fun_notify PROCINLINE:<{
+  $ST1$_fun_notify PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     SWAP
     FALSE
     PUSHNULL
-    $SendTon$_fun_forward INLINECALLDICT
+    $ST1$_fun_forward INLINECALLDICT
   }>
   $SendParameters$_constructor_to_bounce_value_mode PROCINLINE:<{
     s2 s3 XCHG
@@ -399,10 +399,10 @@ PROGRAM{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
-  %$SendTon$_internal_empty PROCINLINE:<{
+  %$ST1$_internal_empty PROCINLINE:<{
     B{b5ee9c7241010101001000001c66756e647320726563656976656471daf862} B>boc <s PUSHSLICE
     B{b5ee9c7241010101001800002c64756d70282266756e6473207265636569766564222977e1acc7} B>boc <s PUSHSLICE
-    x{46696c6520636f6e7472616374732f73656e645f746f6e2e746163743a32313a393a} PUSHSLICE
+    x{46696c6520636f6e7472616374732f735f74312e746163743a32313a393a} PUSHSLICE
     STRDUMP
     DROP
     STRDUMP
@@ -410,7 +410,7 @@ PROGRAM{
     STRDUMP
     DROP
   }>
-  $SendTon$_internal_binary_Withdraw PROCINLINE:<{
+  $ST1$_internal_binary_Withdraw PROCINLINE:<{
     __tact_my_balance INLINECALLDICT
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
@@ -429,14 +429,14 @@ PROGRAM{
     $SendParameters$_constructor_to_bounce_value_mode INLINECALLDICT
     $global_send INLINECALLDICT
   }>
-  $SendTon$_internal_binary_Deploy PROCINLINE:<{
+  $ST1$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT
     $DeployOk$_store_cell INLINECALLDICT
-    $SendTon$_fun_notify INLINECALLDICT
+    $ST1$_fun_notify INLINECALLDICT
   }>
   %balance PROC:<{
-    $SendTon$_contract_load INLINECALLDICT
-    $SendTon$_fun_balance INLINECALLDICT
+    $ST1$_contract_load INLINECALLDICT
+    $ST1$_fun_balance INLINECALLDICT
     NIP
   }>
   lazy_deployment_completed PROC:<{
@@ -445,7 +445,7 @@ PROGRAM{
     1 LDI
     SWAP
   }>
-  $SendTon$_contract_router_internal PROCREF:<{
+  $ST1$_contract_router_internal PROCREF:<{
     SWAP
     IFJMP:<{
       DROP
@@ -468,7 +468,7 @@ PROGRAM{
     AND
     IFJMP:<{
       2DROP
-      %$SendTon$_internal_empty INLINECALLDICT
+      %$ST1$_internal_empty INLINECALLDICT
       TRUE
     }>
     DUP
@@ -478,7 +478,7 @@ PROGRAM{
       DROP
       $Withdraw$_load INLINECALLDICT
       NIP
-      $SendTon$_internal_binary_Withdraw INLINECALLDICT
+      $ST1$_internal_binary_Withdraw INLINECALLDICT
       TRUE
     }>
     2490013878 PUSHINT
@@ -486,7 +486,7 @@ PROGRAM{
     IFJMP:<{
       $Deploy$_load INLINECALLDICT
       NIP
-      $SendTon$_internal_binary_Deploy INLINECALLDICT
+      $ST1$_internal_binary_Deploy INLINECALLDICT
       TRUE
     }>
     DROP
@@ -510,10 +510,10 @@ PROGRAM{
     __tact_context SETGLOB
     s0 s2 XCHG
     __tact_context_sender SETGLOB
-    $SendTon$_contract_load INLINECALLDICT
+    $ST1$_contract_load INLINECALLDICT
     -ROT
-    $SendTon$_contract_router_internal INLINECALLDICT
+    $ST1$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
-    $SendTon$_contract_store INLINECALLDICT
+    $ST1$_contract_store INLINECALLDICT
   }>
 }END>c

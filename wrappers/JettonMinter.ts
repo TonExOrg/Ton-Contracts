@@ -22,6 +22,42 @@ export const JETTON_WALLET_CODE = Cell.fromBoc(Buffer.from(walletdata.hex, 'hex'
 const ONCHAIN_CONTENT_PREFIX = 0x00;
 const SNAKE_PREFIX = 0x00;
 
+
+enum OPS {
+  ChangeAdmin = 3,
+  ReplaceMetadata = 4,
+  Mint = 21,
+  InternalTransfer = 0x178d4519,
+  Transfer = 0xf8a7ea5,
+  Burn = 0x595f07bc,
+}
+
+export function mintBody(
+    owner: Address,
+    jettonValue: bigint,
+    transferToJWallet: bigint,
+    queryId: number,
+    ): Cell {
+    return beginCell()
+        .storeUint(OPS.Mint, 32)
+        .storeUint(queryId, 64) // queryid
+        .storeAddress(owner)
+        .storeCoins(transferToJWallet)
+        .storeRef(
+        // internal transfer message
+        beginCell()
+            .storeUint(OPS.InternalTransfer, 32)
+            .storeUint(0, 64)
+            .storeCoins(jettonValue)
+            .storeAddress(null)
+            .storeAddress(owner)
+            .storeCoins(toNano(0.001))
+            .storeBit(false) // forward_payload in this slice, not separate cell
+            .endCell(),
+        )
+        .endCell();
+    }
+
 export type JettonMinterConfig = {
     owner: Address;
     name: string;
@@ -150,15 +186,20 @@ export class JettonMinter implements Contract {
             .storeUint(Op.internal_transfer, 32)
             .storeUint(0, 64)
             .storeCoins(jetton_amount)
-            .storeAddress(null)
-            .storeAddress(from) // Response addr
-            .storeCoins(forward_ton_amount)
-            .storeMaybeRef(null)
-            .endCell();
+            .storeAddress(null) // TODO FROM?
+            .storeAddress(null) // TODO RESP?
+            .storeCoins(0)
+            .storeBit(false) // forward_payload in this slice, not separate cell
+            .endCell()
+            // .storeAddress(null)
+            // .storeAddress(from)
+            // .storeCoins(forward_ton_amount)
+            // .storeMaybeRef(null)
+            // .endCell();
 
         return beginCell()
             .storeUint(Op.mint, 32)
-            .storeUint(query_id, 64) // op, queryId
+            .storeUint(0, 64) // op, queryId
             .storeAddress(to)
             .storeCoins(total_ton_amount)
             .storeCoins(jetton_amount)
@@ -169,6 +210,7 @@ export class JettonMinter implements Contract {
     async sendMint(
         provider: ContractProvider,
         via: Sender,
+        from: Address,
         to: Address,
         jetton_amount: bigint,
         forward_ton_amount: bigint,
@@ -179,7 +221,8 @@ export class JettonMinter implements Contract {
         }
         await provider.internal(via, {
             sendMode: SendMode.PAY_GAS_SEPARATELY,
-            body: JettonMinter.mintMessage(this.address, to, jetton_amount, forward_ton_amount, total_ton_amount),
+            body: mintBody(to, jetton_amount, toNano(0.02), 0),
+            // body: JettonMinter.mintMessage(from, to, jetton_amount, forward_ton_amount, total_ton_amount),
             value: total_ton_amount + toNano('0.015'),
         });
     }

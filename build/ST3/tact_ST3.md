@@ -1,9 +1,9 @@
 # TACT Compilation Report
-Contract: SendTon
-BOC Size: 815 bytes
+Contract: ST3
+BOC Size: 436 bytes
 
 # Types
-Total Types: 8
+Total Types: 7
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -29,18 +29,12 @@ Signature: `DeployOk{queryId:uint64}`
 TLB: `factory_deploy#6d0ff13b queryId:uint64 cashback:address = FactoryDeploy`
 Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 
-## Withdraw
-TLB: `withdraw#0ba69751 amount:coins = Withdraw`
-Signature: `Withdraw{amount:coins}`
-
-## SendTon$Data
+## ST3$Data
 TLB: `null`
 Signature: `null`
 
 # Get Methods
-Total Get Methods: 1
-
-## balance
+Total Get Methods: 0
 
 # Error Codes
 2: Stack underflow
@@ -67,15 +61,14 @@ Total Get Methods: 1
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
-54615: Insufficient balance
 
 # Trait Inheritance Diagram
 
 ```mermaid
 graph TD
-SendTon
-SendTon --> BaseTrait
-SendTon --> Deployable
+ST3
+ST3 --> BaseTrait
+ST3 --> Deployable
 Deployable --> BaseTrait
 ```
 
@@ -83,5 +76,5 @@ Deployable --> BaseTrait
 
 ```mermaid
 graph TD
-SendTon
+ST3
 ```

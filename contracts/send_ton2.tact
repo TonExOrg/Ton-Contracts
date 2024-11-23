@@ -3,7 +3,7 @@ message Withdraw {
     amount: Int as coins;
 }
 
-contract SendTon with Deployable {
+contract SendTon2 with Deployable {
     //const MinTonForStorage: Int = ton("0.01");
     //deployer: Address;
     //receiver: Address;

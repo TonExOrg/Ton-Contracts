@@ -78,37 +78,37 @@ cell $DeployOk$_store_cell((int) v) inline {
 }
 
 ;;
-;; Type: SendTon
+;; Type: ST1
 ;;
 
-builder $SendTon$_store(builder build_0, (slice) v) inline {
+builder $ST1$_store(builder build_0, (slice) v) inline {
     var (v'deployer) = v;
     build_0 = __tact_store_address(build_0, v'deployer);
     return build_0;
 }
 
-(slice, ((slice))) $SendTon$_load(slice sc_0) inline {
+(slice, ((slice))) $ST1$_load(slice sc_0) inline {
     var v'deployer = sc_0~__tact_load_address();
     return (sc_0, (v'deployer));
 }
 
-(slice) $SendTon$_contract_load() impure inline_ref {
+(slice) $ST1$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
     if ($loaded) {
-        return $sc~$SendTon$_load();
+        return $sc~$ST1$_load();
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        return $SendTon$_contract_init();
+        return $ST1$_contract_init();
     }
 }
 
-() $SendTon$_contract_store((slice) v) impure inline {
+() $ST1$_contract_store((slice) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);
-    b = $SendTon$_store(b, v);
+    b = $ST1$_store(b, v);
     set_data(b.end_cell());
 }

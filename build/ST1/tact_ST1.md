@@ -1,6 +1,6 @@
 # TACT Compilation Report
-Contract: SendTon
-BOC Size: 815 bytes
+Contract: ST1
+BOC Size: 811 bytes
 
 # Types
 Total Types: 8
@@ -33,7 +33,7 @@ Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 TLB: `withdraw#0ba69751 amount:coins = Withdraw`
 Signature: `Withdraw{amount:coins}`
 
-## SendTon$Data
+## ST1$Data
 TLB: `null`
 Signature: `null`
 
@@ -73,9 +73,9 @@ Total Get Methods: 1
 
 ```mermaid
 graph TD
-SendTon
-SendTon --> BaseTrait
-SendTon --> Deployable
+ST1
+ST1 --> BaseTrait
+ST1 --> Deployable
 Deployable --> BaseTrait
 ```
 
@@ -83,5 +83,5 @@ Deployable --> BaseTrait
 
 ```mermaid
 graph TD
-SendTon
+ST1
 ```

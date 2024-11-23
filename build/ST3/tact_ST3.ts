@@ -362,120 +362,67 @@ function dictValueParserFactoryDeploy(): DictionaryValue<FactoryDeploy> {
     }
 }
 
-export type Withdraw = {
-    $$type: 'Withdraw';
-    amount: bigint;
+export type ST3$Data = {
+    $$type: 'ST3$Data';
 }
 
-export function storeWithdraw(src: Withdraw) {
+export function storeST3$Data(src: ST3$Data) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(195467089, 32);
-        b_0.storeCoins(src.amount);
     };
 }
 
-export function loadWithdraw(slice: Slice) {
+export function loadST3$Data(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 195467089) { throw Error('Invalid prefix'); }
-    let _amount = sc_0.loadCoins();
-    return { $$type: 'Withdraw' as const, amount: _amount };
+    return { $$type: 'ST3$Data' as const };
 }
 
-function loadTupleWithdraw(source: TupleReader) {
-    let _amount = source.readBigNumber();
-    return { $$type: 'Withdraw' as const, amount: _amount };
+function loadTupleST3$Data(source: TupleReader) {
+    return { $$type: 'ST3$Data' as const };
 }
 
-function loadGetterTupleWithdraw(source: TupleReader) {
-    let _amount = source.readBigNumber();
-    return { $$type: 'Withdraw' as const, amount: _amount };
+function loadGetterTupleST3$Data(source: TupleReader) {
+    return { $$type: 'ST3$Data' as const };
 }
 
-function storeTupleWithdraw(source: Withdraw) {
+function storeTupleST3$Data(source: ST3$Data) {
     let builder = new TupleBuilder();
-    builder.writeNumber(source.amount);
     return builder.build();
 }
 
-function dictValueParserWithdraw(): DictionaryValue<Withdraw> {
+function dictValueParserST3$Data(): DictionaryValue<ST3$Data> {
     return {
         serialize: (src, builder) => {
-            builder.storeRef(beginCell().store(storeWithdraw(src)).endCell());
+            builder.storeRef(beginCell().store(storeST3$Data(src)).endCell());
         },
         parse: (src) => {
-            return loadWithdraw(src.loadRef().beginParse());
+            return loadST3$Data(src.loadRef().beginParse());
         }
     }
 }
 
-export type SendTon$Data = {
-    $$type: 'SendTon$Data';
-    deployer: Address;
+ type ST3_init_args = {
+    $$type: 'ST3_init_args';
 }
 
-export function storeSendTon$Data(src: SendTon$Data) {
-    return (builder: Builder) => {
-        let b_0 = builder;
-        b_0.storeAddress(src.deployer);
-    };
-}
-
-export function loadSendTon$Data(slice: Slice) {
-    let sc_0 = slice;
-    let _deployer = sc_0.loadAddress();
-    return { $$type: 'SendTon$Data' as const, deployer: _deployer };
-}
-
-function loadTupleSendTon$Data(source: TupleReader) {
-    let _deployer = source.readAddress();
-    return { $$type: 'SendTon$Data' as const, deployer: _deployer };
-}
-
-function loadGetterTupleSendTon$Data(source: TupleReader) {
-    let _deployer = source.readAddress();
-    return { $$type: 'SendTon$Data' as const, deployer: _deployer };
-}
-
-function storeTupleSendTon$Data(source: SendTon$Data) {
-    let builder = new TupleBuilder();
-    builder.writeAddress(source.deployer);
-    return builder.build();
-}
-
-function dictValueParserSendTon$Data(): DictionaryValue<SendTon$Data> {
-    return {
-        serialize: (src, builder) => {
-            builder.storeRef(beginCell().store(storeSendTon$Data(src)).endCell());
-        },
-        parse: (src) => {
-            return loadSendTon$Data(src.loadRef().beginParse());
-        }
-    }
-}
-
- type SendTon_init_args = {
-    $$type: 'SendTon_init_args';
-}
-
-function initSendTon_init_args(src: SendTon_init_args) {
+function initST3_init_args(src: ST3_init_args) {
     return (builder: Builder) => {
         let b_0 = builder;
     };
 }
 
-async function SendTon_init() {
-    const __code = Cell.fromBase64('te6ccgECDwEAAyMAART/APSkE/S88sgLAQIBYgIDAs7QAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxZ2zzy4ILI+EMBzH8BygABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wye1UCwQCAVgJCgHwAZIwf+BwIddJwh+VMCDXCx/eIMAAItdJwSGwjllbi+ZnVuZHMgcmVjZWl2ZWSI0FmR1bXAoImZ1bmRzIHJlY2VpdmVkIimCNCJGaWxlIGNvbnRyYWN0cy9zZW5kX3Rvbi50YWN0OjIxOjk6g/hQw/hQw/hQwf+AgBQL0ghALppdRuo69MNMfAYIQC6aXUbry4IH6AAEx+CdvEPhBbyQTXwOhggiYloChtgiCANVXIcIA8vT4Qn9YgEIQI21tbds8f+CCEJRqmLa6jqfTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gMHAHBgE6bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwHAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7AAgAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwCD7lsDbPNs8MYCwwAEbgr7tRNDSAAGAF27UTQ1AH4Y9IAAY4g+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiDHgMPgo1wsKgwm68uCJ2zwNAQ74J28Qeds8DgAE+EIA2iDBASHCTbHy0IbIIsEAmIAtAcsHAqMC3n9wbwAEjhsEeqkMIMAAUjCws5twM6YwFG+MBKQEA5Ew4gTkAbOXAoAub4wCpN6OEAN6qQymMBNvjAOkIsAAEDTmMyKlA5pTEm+BAcsHAqUC5GwhydA=');
-    const __system = Cell.fromBase64('te6cckECEQEAAy0AAQHAAQEFoP5TAgEU/wD0pBP0vPLICwMCAWIECgLO0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wds88uCCyPhDAcx/AcoAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsntVAwFAfABkjB/4HAh10nCH5UwINcLH94gwAAi10nBIbCOWVuL5mdW5kcyByZWNlaXZlZIjQWZHVtcCgiZnVuZHMgcmVjZWl2ZWQiKYI0IkZpbGUgY29udHJhY3RzL3NlbmRfdG9uLnRhY3Q6MjE6OTqD+FDD+FDD+FDB/4CAGAvSCEAuml1G6jr0w0x8BghALppdRuvLggfoAATH4J28Q+EFvJBNfA6GCCJiWgKG2CIIA1VchwgDy9PhCf1iAQhAjbW1t2zx/4IIQlGqYtrqOp9MfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AwcAgHATptbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPAgByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsACQCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAIBWAsQAg+5bA2zzbPDGAwOAXbtRNDUAfhj0gABjiD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIMeAw+CjXCwqDCbry4InbPA0ABPhCAQ74J28Qeds8DwDaIMEBIcJNsfLQhsgiwQCYgC0BywcCowLef3BvAASOGwR6qQwgwABSMLCzm3AzpjAUb4wEpAQDkTDiBOQBs5cCgC5vjAKk3o4QA3qpDKYwE2+MA6QiwAAQNOYzIqUDmlMSb4EBywcCpQLkbCHJ0AARuCvu1E0NIAAYlGlNVg==');
+async function ST3_init() {
+    const __code = Cell.fromBase64('te6ccgECCgEAAagAART/APSkE/S88sgLAQIBYgIDApLQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxZ2zzy4IIwyPhDAcx/AcoAye1UBAUAEaGFfdqJoaQAAwE07UTQ1AH4Y9IAMJFt4Pgo1wsKgwm68uCJ2zwGAYoBkjB/4HAh10nCH5UwINcLH96CEJRqmLa6jqfTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gMHAHAAJtATptbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPAgByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsACQCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzA==');
+    const __system = Cell.fromBase64('te6cckECDAEAAbIAAQHAAQEFoYerAgEU/wD0pBP0vPLICwMCAWIECwKS0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wds88uCCMMj4QwHMfwHKAMntVAUHATTtRNDUAfhj0gAwkW3g+CjXCwqDCbry4InbPAYAAm0BigGSMH/gcCHXScIflTAg1wsf3oIQlGqYtrqOp9MfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+AwcAgBOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8CQHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wAKAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMABGhhX3aiaGkAAOBQiF2');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
-    initSendTon_init_args({ $$type: 'SendTon_init_args' })(builder);
+    initST3_init_args({ $$type: 'ST3_init_args' })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
 
-const SendTon_errors: { [key: number]: { message: string } } = {
+const ST3_errors: { [key: number]: { message: string } } = {
     2: { message: `Stack underflow` },
     3: { message: `Stack overflow` },
     4: { message: `Integer overflow` },
@@ -500,57 +447,51 @@ const SendTon_errors: { [key: number]: { message: string } } = {
     135: { message: `Code of a contract was not found` },
     136: { message: `Invalid address` },
     137: { message: `Masterchain support is not enabled for this contract` },
-    54615: { message: `Insufficient balance` },
 }
 
-const SendTon_types: ABIType[] = [
+const ST3_types: ABIType[] = [
     {"name":"StateInit","header":null,"fields":[{"name":"code","type":{"kind":"simple","type":"cell","optional":false}},{"name":"data","type":{"kind":"simple","type":"cell","optional":false}}]},
     {"name":"Context","header":null,"fields":[{"name":"bounced","type":{"kind":"simple","type":"bool","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"raw","type":{"kind":"simple","type":"slice","optional":false}}]},
     {"name":"SendParameters","header":null,"fields":[{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"code","type":{"kind":"simple","type":"cell","optional":true}},{"name":"data","type":{"kind":"simple","type":"cell","optional":true}}]},
     {"name":"Deploy","header":2490013878,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DeployOk","header":2952335191,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"Withdraw","header":195467089,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
-    {"name":"SendTon$Data","header":null,"fields":[{"name":"deployer","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"ST3$Data","header":null,"fields":[]},
 ]
 
-const SendTon_getters: ABIGetter[] = [
-    {"name":"balance","arguments":[],"returnType":{"kind":"simple","type":"string","optional":false}},
+const ST3_getters: ABIGetter[] = [
 ]
 
-export const SendTon_getterMapping: { [key: string]: string } = {
-    'balance': 'getBalance',
+export const ST3_getterMapping: { [key: string]: string } = {
 }
 
-const SendTon_receivers: ABIReceiver[] = [
-    {"receiver":"internal","message":{"kind":"empty"}},
-    {"receiver":"internal","message":{"kind":"typed","type":"Withdraw"}},
+const ST3_receivers: ABIReceiver[] = [
     {"receiver":"internal","message":{"kind":"typed","type":"Deploy"}},
 ]
 
-export class SendTon implements Contract {
+export class ST3 implements Contract {
     
     static async init() {
-        return await SendTon_init();
+        return await ST3_init();
     }
     
     static async fromInit() {
-        const init = await SendTon_init();
+        const init = await ST3_init();
         const address = contractAddress(0, init);
-        return new SendTon(address, init);
+        return new ST3(address, init);
     }
     
     static fromAddress(address: Address) {
-        return new SendTon(address);
+        return new ST3(address);
     }
     
     readonly address: Address; 
     readonly init?: { code: Cell, data: Cell };
     readonly abi: ContractABI = {
-        types:  SendTon_types,
-        getters: SendTon_getters,
-        receivers: SendTon_receivers,
-        errors: SendTon_errors,
+        types:  ST3_types,
+        getters: ST3_getters,
+        receivers: ST3_receivers,
+        errors: ST3_errors,
     };
     
     private constructor(address: Address, init?: { code: Cell, data: Cell }) {
@@ -558,15 +499,9 @@ export class SendTon implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: null | Withdraw | Deploy) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: Deploy) {
         
         let body: Cell | null = null;
-        if (message === null) {
-            body = new Cell();
-        }
-        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'Withdraw') {
-            body = beginCell().store(storeWithdraw(message)).endCell();
-        }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'Deploy') {
             body = beginCell().store(storeDeploy(message)).endCell();
         }
@@ -574,13 +509,6 @@ export class SendTon implements Contract {
         
         await provider.internal(via, { ...args, body: body });
         
-    }
-    
-    async getBalance(provider: ContractProvider) {
-        let builder = new TupleBuilder();
-        let source = (await provider.get('balance', builder.build())).stack;
-        let result = source.readString();
-        return result;
     }
     
 }

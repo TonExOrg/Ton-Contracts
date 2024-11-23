@@ -140,7 +140,7 @@ slice $Int$_fun_toCoinsString(int $self) impure inline {
     return __tact_float_to_string($self, 9);
 }
 
-((slice), ()) $SendTon$_fun_forward((slice) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
+((slice), ()) $ST1$_fun_forward((slice) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
     var (($self'deployer)) = $self;
     var ($init) = $init;
     cell $code = null();
@@ -164,8 +164,8 @@ slice $Int$_fun_toCoinsString(int $self) impure inline {
     return (($self'deployer), ());
 }
 
-((slice), ()) $SendTon$_fun_notify((slice) $self, cell $body) impure inline {
+((slice), ()) $ST1$_fun_notify((slice) $self, cell $body) impure inline {
     var (($self'deployer)) = $self;
-    ($self'deployer)~$SendTon$_fun_forward(__tact_context_get_sender(), $body, false, null());
+    ($self'deployer)~$ST1$_fun_forward(__tact_context_get_sender(), $body, false, null());
     return (($self'deployer), ());
 }
